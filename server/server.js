@@ -17,7 +17,8 @@ let port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
-/* **************************** */
+/* **************  POST ************** */
+
 app.post('/todos', authenticate,(req,res) => {
     let todo = new Todo ({
         text: req.body.text,
@@ -31,7 +32,7 @@ app.post('/todos', authenticate,(req,res) => {
     });
 });
 
-/* ****************************** */
+/* ***************  GET   *************** */
 
 app.get('/todos', authenticate, (req,res) => {
     Todo.find({
@@ -42,6 +43,8 @@ app.get('/todos', authenticate, (req,res) => {
         res.setatus(400).send(err);
     });
 });
+
+/* **************  GET ONE  ************** */
 
 app.get('/todos/:id', authenticate, (req, res) => {
     let id = req.params.id;
@@ -60,6 +63,8 @@ app.get('/todos/:id', authenticate, (req, res) => {
     })
 });
 
+/* **************  DELETE  ************** */
+
 app.delete('/todos/:id',authenticate, (req, res) => {
     let id = req.params.id;
 
@@ -77,6 +82,8 @@ app.delete('/todos/:id',authenticate, (req, res) => {
         return res.status(400).send(err)
     });
 });
+
+/* **************  PATCH ************** */
 
 app.patch('/todos/:id', authenticate, (req, res) => {
     let id= req.params.id;
@@ -103,6 +110,8 @@ app.patch('/todos/:id', authenticate, (req, res) => {
     })
 })
 
+/* **************  POST USER  ************** */
+
 app.post('/users',(req,res) => {
     let body= _.pick(req.body, ['email', 'password']);
     let user = new User(body);
@@ -118,12 +127,13 @@ app.post('/users',(req,res) => {
     })
 })
 
+/* **************  GET USER ME ************** */
 
 app.get('/users/me', authenticate, (req,res) => {
     res.send(req.user);
 });
 
-/* ********************************** */
+/* *************** POST LOGIN  ******************* */
 
 app.post('/users/login', (req, res) => {
     var body = _.pick(req.body, ['email', 'password']);
@@ -136,6 +146,8 @@ app.post('/users/login', (req, res) => {
       res.status(400).send(err);
     })
   });
+
+/* **************  DELETE USER ME TOKEN ************** */
 
 app.delete('/users/me/token', authenticate,(req,res) =>{
     req.user.removeToken(req.token).then(() => {
